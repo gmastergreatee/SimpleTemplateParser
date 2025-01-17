@@ -10,7 +10,7 @@ namespace SimpleTokenParser
     public static class StringTokenParser
     {
         /// <summary>
-        /// Generate token based string-parser object
+        /// Generate token based string-parser object. No support for array-types within model.
         /// </summary>
         /// <typeparam name="T">The binding model for the template file-contents</typeparam>
         /// <param name="fileContents">The contents of the template</param>
@@ -73,12 +73,17 @@ namespace SimpleTokenParser
 
             foreach (var line in templateLines)
             {
-                var currentLineTokenSplits = (" " + line + " ").Split(new string[] { TokenParserConstants.PropertyTokenCharacter }, StringSplitOptions.RemoveEmptyEntries);
+                var currentLineTokenSplits = (" " + line + " ").Split(new string[] { TokenParserConstants.PropertyTokenCharacter }, StringSplitOptions.None);
                 for (var i = 0; i < currentLineTokenSplits.Length; i++)
                 {
-                    if (i % 2 == 0 || tokens.Contains(currentLineTokenSplits[i])) { continue; }
+                    var currentToken = currentLineTokenSplits[i];
+                    if (
+                        i % 2 == 0 ||
+                        tokens.Contains(currentToken) ||
+                        TokenParserConstants.IgnoreTokens.Contains(currentToken)
+                    ) { continue; }
 
-                    tokens.Add(currentLineTokenSplits[i]);
+                    tokens.Add(currentToken);
                 }
             }
 
@@ -94,6 +99,11 @@ namespace SimpleTokenParser
 
             foreach (var token in tokens)
             {
+                if (TokenParserConstants.IgnoreTokens.Contains(token))
+                {
+                    continue;
+                }
+
                 var testResult = new TokenTestResult()
                 {
                     Token = token,
