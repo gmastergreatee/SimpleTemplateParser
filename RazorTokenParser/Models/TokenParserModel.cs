@@ -24,7 +24,7 @@ namespace SimpleTokenParser.Models
             var finalContent = new StringBuilder(TemplateContent);
             finalContent = finalContent
                 .Replace(
-                    $"{FileTokenParser.ModelTokenCharacter}{ModelName}{FileTokenParser.ModelTokenCharacter}",
+                    $"{TokenParserConstants.ModelTokenCharacter}{ModelName}{TokenParserConstants.ModelTokenCharacter}",
                     ""
                 );
 
@@ -32,7 +32,7 @@ namespace SimpleTokenParser.Models
             {
                 var tokenValue = ResolveTokenValue(token, model);
                 finalContent = finalContent.Replace(
-                    $"{FileTokenParser.PropertyTokenCharacter}{token}{FileTokenParser.PropertyTokenCharacter}",
+                    $"{TokenParserConstants.PropertyTokenCharacter}{token}{TokenParserConstants.PropertyTokenCharacter}",
                     tokenValue
                 );
             }
@@ -43,7 +43,7 @@ namespace SimpleTokenParser.Models
         {
             var properties = model.GetType().GetProperties() as PropertyInfo[];
             var tokenSplits = token.Split(
-                new string[] { FileTokenParser.TokenClassSplitCharacter },
+                new string[] { TokenParserConstants.TokenClassSplitCharacter },
                 StringSplitOptions.RemoveEmptyEntries
             );
             var property = properties.FirstOrDefault(i => i.Name == tokenSplits[0]);
@@ -56,7 +56,7 @@ namespace SimpleTokenParser.Models
             {
                 return ResolveTokenValue(
                     string.Join(
-                        FileTokenParser.TokenClassSplitCharacter,
+                        TokenParserConstants.TokenClassSplitCharacter,
                         tokenSplits.Skip(1)
                     ),
                     property.GetValue(model)
