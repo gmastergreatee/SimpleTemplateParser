@@ -65,6 +65,10 @@ namespace ConsoleApp_HtmlRazor_TokenParser
             Console.WriteLine("Generating template 2 : " + (DateTime.Now - start).TotalMilliseconds + "ms");
             Console.WriteLine();
             Console.WriteLine(content);
+            Console.WriteLine();
+
+            var studentTemplateParser_NoModel = FileTokenParser.ParseTemplate<object>(filePath, true);
+            Console.WriteLine(studentTemplateParser_NoModel.ApplyModel(null));
 
             Console.ReadLine();
         }

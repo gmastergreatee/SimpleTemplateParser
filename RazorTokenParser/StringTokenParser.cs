@@ -12,16 +12,13 @@ namespace SimpleTokenParser
         /// <summary>
         /// Generate token based string-parser object. No support for array-types within model.
         /// </summary>
-        /// <typeparam name="T">The binding model for the template file-contents</typeparam>
+        /// <typeparam name="T">The binding model for the template file-contents.</typeparam>
         /// <param name="fileContents">The contents of the template</param>
         /// <returns></returns>
         /// <exception cref="ModelNotFoundException">The absense of model in template will throw and exception</exception>
         /// <exception cref="TokenNotFoundException">All tokens used in the template file must be properties found in the model type</exception>
-        public static ITokenParserModel<T> ParseTemplate<T>(string fileContents) where T : class
+        public static ITokenParserModel<T> ParseTemplate<T>(string fileContents, bool ignoreUnavailableTokens = false) where T : class
         {
-            var type = typeof(T);
-            var properties = type.GetProperties();
-
             var templateLines = fileContents.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             var modelName = GetTemplateModel(templateLines);
 
@@ -30,23 +27,30 @@ namespace SimpleTokenParser
                 throw new ModelNotFoundException("Template does not specify any model");
             }
 
-            if (type.FullName != modelName)
+            var type = typeof(T);
+            if (!ignoreUnavailableTokens && type.FullName != modelName)
             {
                 throw new Exception($"Invalid model of type \"{type.FullName}\" passed. Model passed should be of type \"{modelName}\"");
             }
 
+            var properties = type.GetProperties();
             var tokens = GetAllUsedTokens(templateLines);
-            var tokenTest = TestTokensContainedWithinModel(properties, tokens);
-            if (tokenTest.Any(i => !i.FoundInModel))
+
+            if (!ignoreUnavailableTokens)
             {
-                var tokensNotFoundString = String.Join("," + Environment.NewLine, tokenTest.Where(i => !i.FoundInModel).Select(i => i.Token));
-                throw new TokenNotFoundException($"Following tokens weren't found for template\n\n{tokensNotFoundString}");
+                var tokenTest = TestTokensContainedWithinModel(properties, tokens);
+                if (tokenTest.Any(i => !i.FoundInModel))
+                {
+                    var tokensNotFoundString = String.Join("," + Environment.NewLine, tokenTest.Where(i => !i.FoundInModel).Select(i => i.Token));
+                    throw new TokenNotFoundException($"Following tokens weren't found for template\n\n{tokensNotFoundString}");
+                }
             }
 
             return new TokenParserModel<T>(
                 string.Join(Environment.NewLine, templateLines),
                 modelName,
-                tokens
+                tokens,
+                ignoreUnavailableTokens
             );
         }
 
