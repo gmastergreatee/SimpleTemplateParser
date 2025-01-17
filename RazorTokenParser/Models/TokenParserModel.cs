@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace SimpleTokenParser.Models
 {
@@ -20,7 +21,8 @@ namespace SimpleTokenParser.Models
 
         public string ApplyModel(T model)
         {
-            var finalContent = TemplateContent
+            var finalContent = new StringBuilder(TemplateContent);
+            finalContent = finalContent
                 .Replace(
                     $"{FileTokenParser.ModelTokenCharacter}{ModelName}{FileTokenParser.ModelTokenCharacter}",
                     ""
@@ -34,7 +36,7 @@ namespace SimpleTokenParser.Models
                     tokenValue
                 );
             }
-            return finalContent;
+            return finalContent.ToString().Trim();
         }
 
         private string ResolveTokenValue(string token, dynamic model)
