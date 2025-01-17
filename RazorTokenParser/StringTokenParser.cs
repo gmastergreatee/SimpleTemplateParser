@@ -90,12 +90,12 @@ namespace SimpleTokenParser
             return tokens;
         }
 
-        private static IEnumerable<TokenTestResult> TestTokensContainedWithinModel(
+        private static IEnumerable<TokenTestResultModel> TestTokensContainedWithinModel(
             IEnumerable<PropertyInfo> modelProperties,
             IEnumerable<string> tokens
         )
         {
-            var tokenTestResults = new List<TokenTestResult>();
+            var tokenTestResults = new List<TokenTestResultModel>();
 
             foreach (var token in tokens)
             {
@@ -104,7 +104,7 @@ namespace SimpleTokenParser
                     continue;
                 }
 
-                var testResult = new TokenTestResult()
+                var testResult = new TokenTestResultModel()
                 {
                     Token = token,
                     FoundInModel = false,

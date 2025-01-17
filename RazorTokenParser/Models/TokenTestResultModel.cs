@@ -1,6 +1,6 @@
 ﻿namespace SimpleTokenParser.Models
 {
-    public class TokenTestResult
+    internal class TokenTestResultModel
     {
         public string Token { get; set; }
         public bool FoundInModel { get; set; }

@@ -45,7 +45,7 @@
     <Compile Include="Models\ITokenParserModel.cs" />
     <Compile Include="Exceptions\ModelNotFoundException.cs" />
     <Compile Include="Models\TokenParserModel.cs" />
-    <Compile Include="Models\TokenTestResult.cs" />
+    <Compile Include="Models\TokenTestResultModel.cs" />
     <Compile Include="FileTokenParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringTokenParser.cs" />
